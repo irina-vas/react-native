@@ -3,7 +3,7 @@ export interface IMoodOptions {
   description: string;
 }
 
-export interface ImoodOptionWithTimetamp {
+export interface IMoodOptionWithTimetamp {
   mood: IMoodOptions;
   timestamp: number;
 }
