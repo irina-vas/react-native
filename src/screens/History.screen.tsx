@@ -19,7 +19,9 @@ export const History: FC = () => {
 const styles = StyleSheet.create({
   container: {
     width: 400,
-    flex: 1
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row'
   },
   text: {
     width: 400,

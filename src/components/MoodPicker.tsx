@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { IMoodOptions } from '../interfaces';
 import { theme } from '../theme';
 
@@ -12,17 +12,32 @@ const moodOptions:IMoodOptions[] = [
 ];
 
 interface IMoodPickerProps {
-  handleSelectMood: (moodOption: IMoodOptions) => void;
+  handleSelectMood: ((moodOption: IMoodOptions) => void) | undefined;
 }
+
+const imageSrc = require('../../assets/images/buterflies.png');
 
 export const MoodPicker: FC<IMoodPickerProps> = ({ handleSelectMood }) => {
   const [selected, setSelected] = useState<IMoodOptions>();
+  const [hasSelected, setHasSelected] = useState(false);
   const handleSelect = useCallback(() => {
-    if (selected) {
+    if (selected && handleSelectMood) {
       handleSelectMood(selected);
       setSelected(undefined);
+      setHasSelected(true);
     }
-  },[handleSelectMood, selected])
+  },[handleSelectMood, selected]);
+
+  if (hasSelected) {
+    return (
+      <View style={styles.container}>
+        <Image source={imageSrc} style={styles.image} />
+        <Pressable style={styles.button} onPress={() => setHasSelected(false)}>
+          <Text style={styles.buttonText}>Choose another</Text>
+        </Pressable>
+      </View>
+    )
+  }
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>How are you right now?</Text>
@@ -49,17 +64,7 @@ export const MoodPicker: FC<IMoodPickerProps> = ({ handleSelectMood }) => {
 const styles = StyleSheet.create({
   moodText: {
     fontSize: 24
-  },
-  heading: {
-    fontSize: 20,
-    letterSpacing: 1,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  moodList: {
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+    //checked
   },
   moodItem: {
     height: 60,
@@ -68,18 +73,36 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 30,
-    marginBottom: 5,
+    //marginBottom: 5,
+    //checked
+  },
+  heading: {
+    fontSize: 24,
+    letterSpacing: 1,
+    textAlign: 'center',
+    // marginBottom: 20,
+    color: theme.colorWhite,
+    fontFamily: theme.fontFamilyBold,
+    //checked
+  },
+  moodList: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+    //not, but nessesury
   },
   selectedMoodItem: {
     borderWidth: 2,
     backgroundColor: theme.colorPurple,
     borderColor: theme.colorWhite
+    //checked
   },
   descriptionText: {
     color: theme.colorPurple,
     fontWeight: 'bold',
     fontSize: 10,
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: theme.fontFamilyLight,
+    //checked
   },
   button: {
     backgroundColor: theme.colorPurple,
@@ -88,11 +111,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     alignSelf: 'center',
     padding: 10,
+    //checked
   },
   buttonText: {
     color: theme.colorWhite,
     textAlign: 'center',
     fontWeight: 'bold',
+    fontFamily: theme.fontFamilyBold,
+    //checked
   },
   container: {
     borderWidth: 2,
@@ -100,5 +126,15 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 10,
     padding: 20,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    height: 250,
+    justifyContent: 'space-between'
+    //checked
+  },
+  image: {
+    width: 100,
+    height: 100,
+    alignSelf: 'center',
+    marginBottom: 20
   }
 })
