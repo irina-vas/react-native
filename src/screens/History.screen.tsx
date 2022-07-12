@@ -1,30 +1,15 @@
 import React, { FC } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView } from 'react-native';
 import { useAppContext } from '../App.provider';
 import { MoodItemRow } from '../components/MoodItemRow';
 
 export const History: FC = () => {
   const appContext = useAppContext();
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>
-        {appContext.moodList && appContext.moodList.map(item =>
-          <MoodItemRow item={item} key={item.timestamp} />
-        )}
-      </Text>
-    </View>
+    <ScrollView>
+      {appContext.moodList && appContext.moodList.slice().reverse().map(item => (
+        <MoodItemRow item={item} key={item.timestamp} />
+      ))}
+    </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    width: 400,
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'row'
-  },
-  text: {
-    width: 400,
-    flex: 1
-  }
-})

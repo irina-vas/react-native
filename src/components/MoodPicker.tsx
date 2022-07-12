@@ -2,6 +2,9 @@ import React, { FC, useCallback, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { IMoodOptions } from '../interfaces';
 import { theme } from '../theme';
+import Reanimated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
+
+const ReanimatedPressable = Reanimated.createAnimatedComponent(Pressable);
 
 const moodOptions:IMoodOptions[] = [
   { emoji: '🧑‍💻', description: 'studious' },
@@ -20,6 +23,11 @@ const imageSrc = require('../../assets/images/buterflies.png');
 export const MoodPicker: FC<IMoodPickerProps> = ({ handleSelectMood }) => {
   const [selected, setSelected] = useState<IMoodOptions>();
   const [hasSelected, setHasSelected] = useState(false);
+
+  const buttonStyle = useAnimatedStyle(() => ({
+    opacity: selected ? withTiming(1) : withTiming(0.5),
+    transform: [{ scale: selected ? withTiming(1) : 0.8}]
+  }),[selected])
   const handleSelect = useCallback(() => {
     if (selected && handleSelectMood) {
       handleSelectMood(selected);
@@ -54,9 +62,9 @@ export const MoodPicker: FC<IMoodPickerProps> = ({ handleSelectMood }) => {
           </View>
         ))}
       </View>
-      <Pressable style={styles.button} onPress={handleSelect}>
+      <ReanimatedPressable style={[styles.button, buttonStyle]} onPress={handleSelect}>
         <Text style={styles.buttonText}>Choose</Text>
-      </Pressable>
+      </ReanimatedPressable>
     </View>
   );
 };
@@ -64,7 +72,6 @@ export const MoodPicker: FC<IMoodPickerProps> = ({ handleSelectMood }) => {
 const styles = StyleSheet.create({
   moodText: {
     fontSize: 24
-    //checked
   },
   moodItem: {
     height: 60,
@@ -73,28 +80,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 30,
-    //marginBottom: 5,
-    //checked
   },
   heading: {
     fontSize: 24,
     letterSpacing: 1,
     textAlign: 'center',
-    // marginBottom: 20,
     color: theme.colorWhite,
     fontFamily: theme.fontFamilyBold,
-    //checked
   },
   moodList: {
     flexDirection: 'row',
     justifyContent: 'space-between'
-    //not, but nessesury
   },
   selectedMoodItem: {
     borderWidth: 2,
     backgroundColor: theme.colorPurple,
     borderColor: theme.colorWhite
-    //checked
   },
   descriptionText: {
     color: theme.colorPurple,
@@ -102,7 +103,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textAlign: 'center',
     fontFamily: theme.fontFamilyLight,
-    //checked
   },
   button: {
     backgroundColor: theme.colorPurple,
@@ -111,14 +111,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     alignSelf: 'center',
     padding: 10,
-    //checked
   },
   buttonText: {
     color: theme.colorWhite,
     textAlign: 'center',
     fontWeight: 'bold',
     fontFamily: theme.fontFamilyBold,
-    //checked
   },
   container: {
     borderWidth: 2,
@@ -129,7 +127,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.2)',
     height: 250,
     justifyContent: 'space-between'
-    //checked
   },
   image: {
     width: 100,
